@@ -1,12 +1,16 @@
-import ProductManager from "./ProductManager.js";
+/* import ProductManager from "./ProductManager.js"; */
+/* const products = new ProductManager('/files/Products.json'); */
 import express from "express";
-const products = new ProductManager('/files/Products.json');
+import productsRouter from './routes/products.router.js';
+import cartRouter from './routes/cart.router.js'
+
 const productServer = express();
 
 
+productServer.use(express.json());
+productServer.use(express.urlencoded({extended: true}));
 
-
-productServer.get("/products", async (req, res) => {
+/* productServer.get("/products", async (req, res) => {
     const consult = await products.getProducts();
     const limit = Number.parseInt(req.query.limit)
 
@@ -33,7 +37,11 @@ productServer.get("products/:pid", async (req, res) => {
         res.send(idConsult)
     }
 
-});
+});  */
+
+productServer.use("/api/products", productsRouter);
+productServer.use("/api/carts", cartRouter);
+
 
 productServer.listen(8080, () => {
     console.log("Listening on port 8080");
