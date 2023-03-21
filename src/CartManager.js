@@ -1,4 +1,5 @@
 import fs from "fs"
+import {Blob} from "buffer";
 
 /* Define cartManager, path, array */
 export default class CartManager {

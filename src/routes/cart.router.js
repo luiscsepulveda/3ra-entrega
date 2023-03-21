@@ -1,7 +1,7 @@
 /* first of all import */
 import { Router } from "express"
 /* import ProductManager from "../ProductManager" */
-import CartManager from "../CartManager"
+import CartManager from "../CartManager.js"
 
 const router = Router();
 

@@ -3,14 +3,16 @@
 import express from "express";
 import productsRouter from './routes/products.router.js';
 import cartRouter from './routes/cart.router.js'
+import __dirname from "./utils.js";
 
 const productServer = express();
 
 
 productServer.use(express.json());
 productServer.use(express.urlencoded({extended: true}));
+productServer.use("/", express.static(`${__dirname}/public`));
 
-/* productServer.get("/products", async (req, res) => {
+/* productServer.get("/products", async (req, rsres) => {
     const consult = await products.getProducts();
     const limit = Number.parseInt(req.query.limit)
 

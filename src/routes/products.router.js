@@ -1,4 +1,4 @@
-import ProductManager from "../ProductManager";
+import ProductManager from "../ProductManager.js";
 import { Router } from "express";
 
 const router = Router();
@@ -52,13 +52,43 @@ router.get ("/:pid", async(req, res) => {
 router.post("/", async(req, res) =>{
     let newProduct = req.body;
 
+
+    /* const product = {
+        id: consult.length + 1,
+        title: req.body.title,
+        description: req.body.description,
+        price: req.body.price,
+        thumbnail: thumbnail,
+        code: req.body.code,
+        stock: req.body.stock,
+    }
+    if (consult.length === 0) {
+        product.id = 1;
+    } else {
+    const lastProduct = consult[consult.length - 1];
+    if (lastProduct.id === undefined) {
+        return res
+            .status(400)
+            .send({status: `Error`, error: `Last product does not have any id`});
+    }
+    product.id = lastProduct.id + 1;
+    } */
+
+    if(!newProduct.title || !newProduct.description || !newProduct.price || !newProduct.status || !newProduct.code || !newProduct.thumbnails || !newProduct.stock || !newProduct.category) {
+        return res
+            .status(400)
+            .send({status: `Error`, error: `All fields are mandatory`});
+    }
+
+
+
     let result = await manager.addProduct(newProduct);
-    if(typeof(result) === "string"){
+   /*  if(typeof(result) === "string"){
         return res.status(400).send({
             status: "error", message: {error: result},
         });
-    }
-    return res.status(201).send({
+    } */
+    return res.status(200).send({
         status: "success",
         message: { success: `your cart has a new product, Go and check this out` },
     })
@@ -108,3 +138,5 @@ router.delete("/pid", async(req, res) => {
 
 
 })
+
+export default router;
