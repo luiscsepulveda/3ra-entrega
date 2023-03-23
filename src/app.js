@@ -2,15 +2,31 @@
 /* const products = new ProductManager('/files/Products.json'); */
 import express from "express";
 import productsRouter from './routes/products.router.js';
+import viewsRouter from './routes/views.router.js'
 import cartRouter from './routes/cart.router.js'
+
 import __dirname from "./utils.js";
+import handlebars from 'express-handlebars';
+
+import { Server } from "socket.io";
+import socket from './socket.js'
 
 const productServer = express();
+const httpServer = productServer.listen(8080, () => {
+    console.log("Listening on port 8080");
+});
 
+/* const socketServer = new Server(httpServer); */
+
+productServer.engine('handlebars',handlebars.engine());
+productServer.set('views', __dirname+'/views');
+productServer.set('view engine', 'handlebars');
+productServer.use(express.static(`${__dirname}/public`));
+productServer.use("/", viewsRouter);
 
 productServer.use(express.json());
 productServer.use(express.urlencoded({extended: true}));
-productServer.use("/", express.static(`${__dirname}/public`));
+
 
 /* productServer.get("/products", async (req, rsres) => {
     const consult = await products.getProducts();
@@ -45,6 +61,10 @@ productServer.use("/api/products", productsRouter);
 productServer.use("/api/carts", cartRouter);
 
 
-productServer.listen(8080, () => {
-    console.log("Listening on port 8080");
-});
+
+
+/* Server.on('connection', socket =>{
+    console.log('New Client is online');
+})
+ */
+socket.connect(httpServer)
