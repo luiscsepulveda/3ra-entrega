@@ -6,21 +6,24 @@ import viewsRouter from './routes/views.router.js'
 import cartRouter from './routes/cart.router.js'
 
 import __dirname from "./utils.js";
-import handlebars from 'express-handlebars';
+import handlebars from "express-handlebars";
 
 import { Server } from "socket.io";
-import socket from './socket.js'
+import socket from './socket.js';
 
 const productServer = express();
+
 const httpServer = productServer.listen(8080, () => {
     console.log("Listening on port 8080");
 });
 
-/* const socketServer = new Server(httpServer); */
 
+
+/* handlebars configurations */
 productServer.engine('handlebars',handlebars.engine());
-productServer.set('views', __dirname+'/views');
+productServer.set('views', `${__dirname}/views`);
 productServer.set('view engine', 'handlebars');
+
 productServer.use(express.static(`${__dirname}/public`));
 productServer.use("/", viewsRouter);
 
@@ -61,10 +64,24 @@ productServer.use("/api/products", productsRouter);
 productServer.use("/api/carts", cartRouter);
 
 
+let testUser = {
+    name: "Luis",
+    lastName: "Sepulveda",
+}
 
-
-/* Server.on('connection', socket =>{
-    console.log('New Client is online');
+productServer.get("/", (req, res)=> {
+    res.render("index", testUser);
 })
- */
+
+const socketServer = new Server(httpServer);
+
+socketServer.on("connection", socket =>{ 
+    console.log('New Client is online');
+
+    socket.on("message", (data) => {
+        console.log(data);
+    });
+})
+
+
 socket.connect(httpServer)

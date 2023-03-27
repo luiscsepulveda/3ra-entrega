@@ -73,25 +73,36 @@ router.post("/", async(req, res) =>{
     }
     product.id = lastProduct.id + 1;
     } */
-
+    
     if(!newProduct.title || !newProduct.description || !newProduct.price || !newProduct.status || !newProduct.code || !newProduct.thumbnails || !newProduct.stock || !newProduct.category) {
         return res
             .status(400)
             .send({status: `Error`, error: `All fields are mandatory`});
     }
 
+    await manager.addProduct(newProduct);
+
+        return res
+        .status(200)
+        .send({
+            status: "success",
+            message: { success: `your cart has a new product, Go and check this out` },
+        })
+    
 
 
-    let result = await manager.addProduct(newProduct);
+
+    
    /*  if(typeof(result) === "string"){
         return res.status(400).send({
             status: "error", message: {error: result},
         });
+    }else{
+        return res.status(200).send({
+            status: "success",
+            message: { success: `your cart has a new product, Go and check this out` },
+        })
     } */
-    return res.status(200).send({
-        status: "success",
-        message: { success: `your cart has a new product, Go and check this out` },
-    })
 });
 
 router.put("/:pid", async(req, res) => {

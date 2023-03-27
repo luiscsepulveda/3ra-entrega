@@ -79,8 +79,12 @@ export default class ProductManager {
         
     
             products.push(product);
+
             await fs.promises.writeFile(this.path, JSON.stringify(products, null, "\t"));
-            return products;
+            
+
+            socket.io.emit("product_added", product);
+            return product;
     
         }
 
